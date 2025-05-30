@@ -2,18 +2,24 @@ from selenium import webdriver #Simulação de um browser
 from selenium.common.exceptions import TimeoutException
 from time import sleep #Simulação do tempo de carregamento
 
-#Precisamos definir qual driver vamos utilizar
-driver = webdriver.Firefox()
+import pytest
+import subprocess
 
-#Define um timeout implícito
-driver.set_page_load_timeout(5)
+@pytest.fixture #Código que vai ser chamado para todos os testes
+def driver():
+    #Iniciar o Streamlit em background
+    process = subprocess.Popen(["streamlit", "run", "src/app.py"])
 
-#Vamos fazer uma tratativa de try-except de entrar na nossa página
-try:
-    driver.get("http://localhost:8501") #A aplicação ta nessa porta, testa se ela está online
-    sleep(5) #Esperar 5 segundos
-    print("Acessou a página com sucesso")
-except TimeoutException: #Se não funcionou...
-    print("Tempo de carregamento da página excedeu o limite.")
-finally:
+    #Iniciar o WebDriver usando o GeckoDriver
+    driver = webdriver.Firefox()
+    driver.set_page_load_timeout(5)
+    yield driver #Roda varias vezes
+
+    #Fechar o WebDriver e o Streamlit após o teste
     driver.quit()
+    process.kill()
+
+def test_app_opens(driver):
+    #Verificar se a página abre
+    driver.get("https://localhost:8501")
+    sleep(5)
