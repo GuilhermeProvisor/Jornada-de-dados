@@ -92,11 +92,3 @@ task run
 ```
 
 8. Verifique na pasta data/output se o arquivo foi gerado corretamente.
-
-## Contato
-
-Para dúvidas, sugestões:
-* **Luciano Filho** - [lvgalvaofilho@gmail.com](mailto:lvgalvaofilho@gmail.com)
-
-
-Teste 1
